@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Dienststufen-Rechner</title>
+<script>
+var zeitstufen=[150.0,300.0,3600.0,28800.0,86400.0,604800.0,2592000.0,31536000.0,parseFloat("+inf")]
+function findInterp(stufen,wert){
+    var gte=-1;
+    while (gte<stufen.length&&wert<stufen[gte]){
+        gte++;
+    }
+    if (gte==-1){
+        return 0;
+    }
+    if (wert!=stufen[gte]){
+        return gte+(wert-stufen[gte])/(stufen[gte+1]-stufen[gte]);
+    }
+}
+function chkFormular(){
+    return false;
+}
+</script>
+</head>
+<body>
+<h1>Dienststufen-Rechner</h1>
+<form onsubmit="return chkFormular()">
+    <ol>
+    <li>50 KR</li><li>1 SR</li><li>1 Stunde</li><li>8 Stunden</li><li>1 Tag</li><li>1 Woche</li><li>1 Monat</li><li>1 Jahr</li><li>permanent</li>
+    </ol>
+    Basis:
+    <input type="number" value="1" name="basiszeit" id="basiszeit">
+    <select name="basiszeit_einheit" id="basiszeit_einheit">
+        <option value="3">KR</option>
+        <option value="300">SR</option>
+        <option value="3600">Stunden</option>
+        <option value="86400">Tage</option>
+        <option value="604800">Wochen</option>
+        <option value="2592000">Monate</option>
+        <option value="31536000">Jahre</option>
+    </select>
+    <input type="number" value="1" name="zielzeit" id="zielzeit">
+    <select name="zielzeit_einheit" id="zielzeit_einheit">
+        <option value="3">KR</option>
+        <option value="300">SR</option>
+        <option value="3600">Stunden</option>
+        <option value="86400">Tage</option>
+        <option value="604800">Wochen</option>
+        <option value="2592000">Monate</option>
+        <option value="31536000">Jahre</option>
+    </select>
+
+    <ol>
+    <li>besonders unedel</li><li>unedel</li><li>gemindert</li><li>rein</li><li>konzentriert</li><li>edel</li><li>besonders edel</li>
+    </ol>
+    <ol>
+    <li>1 Gran</li><li>1 Skrupel</li><li>1 Unze</li><li>1 Stein</li><li>5 Stein</li><li>25 Stein</li><li>125 Stein</li><li>1 Quader</li><li>10 Quader</li>
+    </ol>
+
+<input type="submit">
+</form>
+</body>
+</html>
