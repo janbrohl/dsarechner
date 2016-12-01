@@ -1,103 +1,125 @@
 <!DOCTYPE HTML>
 <html>
+
 <head>
-<title>Wahrscheinlichkeiten zu TaW</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.1.1/Chart.min.js" integrity="sha384-V1EmgDMyBp2S3+YaglIFmVq88e2GWAILvbZ4j8SJlYjEk2k3WV+R7QKz4DjxyfBx" crossorigin="anonymous"></script>
-<script>
-function histo(a,b,c){
-	var histo=new Array(61);
-	var max=-1;
-	for (var i=1;i<=20;i++){
-		var ai=Math.max(0,i-a);
-		for (var j=1;j<=20;j++){
-			var bj=Math.max(0,j-b);
-			for (var k=1;k<=20;k++){
-				var n=ai+bj+Math.max(0,k-c);
-				if (!histo[n]){
-					histo[n]=0;
-					max=Math.max(max,n);
-				}
-				histo[n]+=1;
-			}
-		}
-	}
-	histo.length=max+1;
-	return histo;
-}
-function accu(arr){
-	var s=0;
-	var out=new Array(arr.length);
-	for (var i=0;i<arr.length;i++){
-		s+=arr[i];
-		out[i]=s;
-	}
-	return out;
-}
-
-function arrscale(arr,s){
-	return arr.map(function(v){return v*s;});
-}
-
-function chkFormular(){
-    var a=Number.parseInt(document.getElementById("a").value);
-    var b=Number.parseInt(document.getElementById("b").value);
-    var c=Number.parseInt(document.getElementById("c").value);
-    var arr=histo(a,b,c);
-    var aarr=accu(arr);
-    var iarr=new Array(arr.length);
-    for (var i=0;i<iarr.length;i++){
-        iarr[i]="TaW-"+i;
-    }
-    var lineChartData = {
-labels : iarr,
-datasets : [
-{
-    label: "Einzel",
-            fillColor: "rgba(220,0,0,0.2)",
-            strokeColor: "rgba(220,0,0,1)",
-            pointColor: "rgba(220,0,0,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(220,0,0,1)",
-data: arrscale(arr,1.0/8000)
-},
-{
-    label: "Summiert",
-            fillColor: "rgba(0,0,220,0.2)",
-            strokeColor: "rgba(0,0,220,1)",
-            pointColor: "rgba(0,0,220,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(0,0,220,1)",
-data: arrscale(aarr,1.0/8000)
-}
-]
-}
-if(window.myLine){
-    window.myLine.clear();
-    window.myLine.destroy();
-}
-var myCanvas = document.getElementById("canvas");
-var ctx = myCanvas.getContext("2d");
-window.myLine = new Chart(ctx).Line(lineChartData, {
-responsive: true,
-bezierCurve: false
-});
-return false;
-}
-</script>
+    <title>Wahrscheinlichkeiten f&uuml;r TaP-Verbrauch</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.1.1/Chart.min.js" integrity="sha384-V1EmgDMyBp2S3+YaglIFmVq88e2GWAILvbZ4j8SJlYjEk2k3WV+R7QKz4DjxyfBx" crossorigin="anonymous"></script>
+    <script>
+        function histo(a,b,c){
+        	var histo=new Array(61);
+        	var max=-1;
+        	for (var i=1;i<=20;i++){
+        		var ai=Math.max(0,i-a);
+        		for (var j=1;j<=20;j++){
+        			var bj=Math.max(0,j-b);
+        			for (var k=1;k<=20;k++){
+        				var n=ai+bj+Math.max(0,k-c);
+        				if (!histo[n]){
+        					histo[n]=0;
+        					max=Math.max(max,n);
+        				}
+        				histo[n]+=1;
+        			}
+        		}
+        	}
+        	histo.length=max+1;
+        	return histo;
+        }
+        function accu(arr){
+        	var s=0;
+        	var out=new Array(arr.length);
+        	for (var i=0;i<arr.length;i++){
+        		s+=arr[i];
+        		out[i]=s;
+        	}
+        	return out;
+        }
+        
+        function arrscale(arr,s){
+        	return arr.map(function(v){return v*s;});
+        }
+        
+        function expected(arr){
+        	var s=0;
+        	for (var i=0;i<arr.length;i++){
+        		s+=i*arr[i];
+        	}
+        	return s/8000.0
+        }
+        
+        function chkFormular(){
+            var a=Number.parseInt(document.getElementById("a").value);
+            var b=Number.parseInt(document.getElementById("b").value);
+            var c=Number.parseInt(document.getElementById("c").value);
+            var arr=histo(a,b,c);
+            var aarr=accu(arr);
+            var iarr=new Array(arr.length);
+            for (var i=0;i<iarr.length;i++){
+                iarr[i]=i+" TaP";
+            }
+        	document.getElementById("erwartet").textContent=expected(arr);
+            var lineChartData = {
+				labels : iarr,
+				datasets : [
+					{
+						label: "Einzel",
+								fillColor: "rgba(220,0,0,0.2)",
+								strokeColor: "rgba(220,0,0,1)",
+								pointColor: "rgba(220,0,0,1)",
+								pointStrokeColor: "#fff",
+								pointHighlightFill: "#fff",
+								pointHighlightStroke: "rgba(220,0,0,1)",
+						data: arrscale(arr,1.0/8000)
+					},
+					{
+						label: "Summiert",
+								fillColor: "rgba(0,0,220,0.2)",
+								strokeColor: "rgba(0,0,220,1)",
+								pointColor: "rgba(0,0,220,1)",
+								pointStrokeColor: "#fff",
+								pointHighlightFill: "#fff",
+								pointHighlightStroke: "rgba(0,0,220,1)",
+						data: arrscale(aarr,1.0/8000)
+					}
+				]
+        }
+        if(window.myLine){
+            window.myLine.clear();
+            window.myLine.destroy();
+        }
+        var myCanvas = document.getElementById("canvas");
+        var ctx = myCanvas.getContext("2d");
+        window.myLine = new Chart(ctx).Line(lineChartData, {
+        responsive: true,
+        bezierCurve: false
+        });
+        return false;
+        }
+    </script>
 </head>
+
 <body>
-<h1>Wahrscheinlichkeiten zu TaW</h1>
-<form onsubmit="return chkFormular()">
-Eigenschaftswerte: <input type="number" name="a" value="12" step="1" id="a"><input type="number" name="b" value="12" step="1" id="b"><input type="number" name="c" value="12" step="1" id="c">
-<input type="submit">
-</form>
-<div>
-<div>
-<canvas id="canvas" ></canvas>
-</div>
-</div>
-<h2>Legende</h2><ul></ul><li><span style="color:rgba(220,0,0,1);font-size:larger">Einzeln</span></li> <li><span style="color:rgba(0,0,220,1);font-size:larger">Summiert von 0 bis hier</span></li></ul>
+    <h1>Wahrscheinlichkeiten f&uuml;r TaP-Verbrauch</h1>
+    <form onsubmit="return chkFormular()">
+        Eigenschaftswerte: <input type="number" name="a" value="12" step="1" id="a"><input type="number" name="b" value="12" step="1" id="b"><input type="number" name="c" value="12" step="1" id="c">
+        <input type="submit">
+    </form>
+    <hr>
+    <div>
+        <p>
+            Wahrscheinlichkeiten:
+            <ul>
+                <li><span style="color:rgba(220,0,0,1);font-size:larger">Einzeln</span></li>
+                <li><span style="color:rgba(0,0,220,1);font-size:larger">Summiert von 0 bis hier</span></li>
+            </ul>
+        </p>
+        <p>
+            Erwarteter TaP-Verbrauch: <i id="erwartet"></i>
+        </p>
+        <div>
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
 </body>
+
 </html>
