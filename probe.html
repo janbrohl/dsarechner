@@ -32,7 +32,7 @@
         function percentile(akkumumiertesHistogrammArray, p) {
             var n = p * 8000.0
             for (var i = 0; i < akkumumiertesHistogrammArray.length; i++) {
-                var s= akkumumiertesHistogrammArray[i];
+                var s = akkumumiertesHistogrammArray[i];
                 if (s == n) {
                     return i;
                 } else if (s > n) {
@@ -80,7 +80,7 @@
             }
             document.getElementById("erwartet").textContent = expected(histogrammArray);
             document.getElementById("median").textContent = percentile(akkumumiertesHistogrammArray, 0.5);
-            document.getElementById("per80").textContent = percentile(akkumumiertesHistogrammArray, 0.8); 
+            document.getElementById("per80").textContent = percentile(akkumumiertesHistogrammArray, 0.8);
 
             var lineChartData = {
                 labels: labelsArray,
