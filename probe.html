@@ -29,18 +29,17 @@
             histo.length = max + 1;
             return histo;
         }
-        function percentile(arr, p) {
-            var n = p * 8000
-            var s = 0;
-            for (var i = 1; i < arr.length; i++) {
-                s += arr[i];
+        function percentile(akkumumiertesHistogrammArray, p) {
+            var n = p * 8000.0
+            for (var i = 0; i < akkumumiertesHistogrammArray.length; i++) {
+                var s= akkumumiertesHistogrammArray[i];
                 if (s == n) {
                     return i;
                 } else if (s > n) {
                     return i - 0.5;
                 }
             }
-            return arr.length;
+            return akkumumiertesHistogrammArray.length;
         }
         function accu(arr) {
             // Akkumuliert arr[0] bis arr[i] in ausgabe[i]
@@ -61,7 +60,7 @@
         function expected(histogrammArray) {
             // Berechnet den Erwartungswert aus dem Histogramm
             var s = 0;
-            for (var i = 1; i < histogrammArray.length; i++) {
+            for (var i = 0; i < histogrammArray.length; i++) {
                 s += i * histogrammArray[i];
             }
             return s / 8000.0
@@ -80,8 +79,8 @@
                 labelsArray[i] = i + " TaP";
             }
             document.getElementById("erwartet").textContent = expected(histogrammArray);
-            document.getElementById("median").textContent = percentile(histogrammArray, 0.5);
-            document.getElementById("per80").textContent = percentile(histogrammArray, 0.8); s
+            document.getElementById("median").textContent = percentile(akkumumiertesHistogrammArray, 0.5);
+            document.getElementById("per80").textContent = percentile(akkumumiertesHistogrammArray, 0.8); 
 
             var lineChartData = {
                 labels: labelsArray,
