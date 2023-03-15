@@ -44,14 +44,13 @@
             }
             return s;
         }
-        function percentile(akkumumiertesHistogrammArray, p) {
+        function quantil(akkumumiertesHistogrammArray, p) {
+            // Gibt den ersten Index für den Wert >= p*Länge
             var n = p * akkumumiertesHistogrammArray[akkumumiertesHistogrammArray.length - 1]
             for (var i = 0; i < akkumumiertesHistogrammArray.length; i++) {
                 var s = akkumumiertesHistogrammArray[i];
-                if (s == n) {
+                if (s >= n) { // ist das mathematisch korrekt?
                     return i;
-                } else if (s > n) {
-                    return i - 0.5;
                 }
             }
             return akkumumiertesHistogrammArray.length;
@@ -94,8 +93,8 @@
                 labelsArray[i] = i + " TaP";
             }
             document.getElementById("erwartet").textContent = expected(histogrammArray);
-            document.getElementById("per50").textContent = percentile(akkumumiertesHistogrammArray, 0.5);
-            document.getElementById("per80").textContent = percentile(akkumumiertesHistogrammArray, 0.8);
+            document.getElementById("per50").textContent = quantil(akkumumiertesHistogrammArray, 0.5);
+            document.getElementById("per80").textContent = quantil(akkumumiertesHistogrammArray, 0.8);
 
             var lineChartData = {
                 labels: labelsArray,
