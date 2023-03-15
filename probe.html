@@ -7,30 +7,45 @@
         integrity="sha384-V1EmgDMyBp2S3+YaglIFmVq88e2GWAILvbZ4j8SJlYjEk2k3WV+R7QKz4DjxyfBx"
         crossorigin="anonymous"></script>
     <script>
+        "use strict";
         function histo(a, b, c) {
             // Erzeugt Histogramm 
-            var histo = new Array(61);
-            var max = -1;
-            for (var i = 1; i <= 20; i++) {
-                var ai = Math.max(0, i - a);
-                for (var j = 1; j <= 20; j++) {
-                    var bj = Math.max(0, j - b);
-                    for (var k = 1; k <= 20; k++) {
-                        var ck = Math.max(0, k - c)
-                        var n = ai + bj + ck;
-                        if (!histo[n]) {
-                            histo[n] = 0;
-                            max = Math.max(max, n);
+            var arr = new Array(61);
+            for (var wurfA = 1; wurfA <= 20; wurfA++) {
+                var verbrauchA = Math.max(0, wurfA - a);
+                for (var wurfB = 1; wurfB <= 20; wurfB++) {
+                    var verbrauchB = Math.max(0, wurfB - b);
+                    for (var wurfC = 1; wurfC <= 20; wurfC++) {
+                        var verbrauchC = Math.max(0, wurfC - c)
+                        var verbrauchGesamt = verbrauchA + verbrauchB + verbrauchC;
+                        if (arr[verbrauchGesamt]) {
+                            arr[verbrauchGesamt] += 1;
+                        } else {
+                            arr[verbrauchGesamt] = 1;
                         }
-                        histo[n] += 1;
                     }
                 }
             }
-            histo.length = max + 1;
-            return histo;
+            for (var i = 60; i >= 0; i--) {
+                if (arr[i]) {
+                    arr.length = i + 1;
+                    return arr;
+                }
+            }
+
+        }
+        function arraySumme(arr) {
+            var s = 0;
+            for (var i = 0; i < arr.length; i++) {
+                var v = arr[i];
+                if (v) {
+                    s += v;
+                }
+            }
+            return s;
         }
         function percentile(akkumumiertesHistogrammArray, p) {
-            var n = p * 8000.0
+            var n = p * akkumumiertesHistogrammArray[akkumumiertesHistogrammArray.length - 1]
             for (var i = 0; i < akkumumiertesHistogrammArray.length; i++) {
                 var s = akkumumiertesHistogrammArray[i];
                 if (s == n) {
@@ -45,7 +60,7 @@
             // Akkumuliert arr[0] bis arr[i] in ausgabe[i]
             var s = 0;
             var out = new Array(arr.length);
-            for (var i = 1; i < arr.length; i++) {
+            for (var i = 0; i < arr.length; i++) {
                 s += arr[i];
                 out[i] = s;
             }
@@ -63,7 +78,7 @@
             for (var i = 0; i < histogrammArray.length; i++) {
                 s += i * histogrammArray[i];
             }
-            return s / 8000.0
+            return s / arraySumme(histogrammArray);
         }
 
 
@@ -79,7 +94,7 @@
                 labelsArray[i] = i + " TaP";
             }
             document.getElementById("erwartet").textContent = expected(histogrammArray);
-            document.getElementById("median").textContent = percentile(akkumumiertesHistogrammArray, 0.5);
+            document.getElementById("per50").textContent = percentile(akkumumiertesHistogrammArray, 0.5);
             document.getElementById("per80").textContent = percentile(akkumumiertesHistogrammArray, 0.8);
 
             var lineChartData = {
@@ -139,7 +154,7 @@
         </ul>
         </p>
         <p>
-            TaP-Verbrauch: Durchschnitt <i id="erwartet">?</i>; Median <i id="median">?</i>; 80&percnt; <i
+            TaP-Verbrauch: Durchschnitt <i id="erwartet">?</i>; 50% maximal <i id="per50">?</i>; 80% maximal <i
                 id="per80">?</i>
         </p>
         <div>
